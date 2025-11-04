@@ -1,0 +1,74 @@
+{
+  "expo": {
+    "name": "WorkTimeTracker",
+    "slug": "work-time-tracker",
+    "version": "1.0.0",
+    "orientation": "portrait",
+
+    "icon": "./assets/splash.png", 
+
+    "userInterfaceStyle": "automatic",
+
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.nruppatel.worktimetracker",
+      "config": {
+        "googleMapsApiKey": "AIzaSyAMt7DavYfCkVq-_PeMlPtV1O5lwYIj_68"
+      },
+      "infoPlist": {
+        "UIBackgroundModes": ["location"],
+        "NSLocationWhenInUseUsageDescription": "This app needs your location to set up your work geofence and track when you're at work.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "This app tracks your location to automatically log your work hours when you arrive at and leave your workplace.",
+        "NSLocationAlwaysUsageDescription": "This app tracks your location in the background to automatically log your work hours.",
+        "NSUserTrackingUsageDescription": "WorkTimeTracker uses location to detect when you arrive at and leave your workplace automatically.",
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+
+    "android": {
+      "package": "com.nruppatel.worktimetracker",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/splash.png",
+        "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "FOREGROUND_SERVICE",
+        "FOREGROUND_SERVICE_LOCATION",
+        "RECEIVE_BOOT_COMPLETED"
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAMt7DavYfCkVq-_PeMlPtV1O5lwYIj_68"
+        }
+      }
+    },
+
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow WorkTimeTracker to use your location to automatically track work hours.",
+          "locationAlwaysPermission": "Allow WorkTimeTracker to use your location in the background to track when you arrive and leave work.",
+          "locationWhenInUsePermission": "Allow WorkTimeTracker to access your location to set up geofencing.",
+          "isAndroidBackgroundLocationEnabled": true,
+          "isAndroidForegroundServiceEnabled": true
+        }
+      ]
+    ],
+
+    "extra": {
+      "eas": {
+        "projectId": "9f112e0d-ea69-4abd-8f90-8911e81f4b66"
+      }
+    }
+  }
+}
