@@ -12,6 +12,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { WorkShiftService } from '../services/supabase';
 import { GeofencingService } from '../services/geofencingService';
 import { format, parseISO, differenceInMinutes } from 'date-fns';
+import Colors from '../theme/colors';
 
 export default function EditShiftScreen({ route, navigation }) {
   const { shiftData, index } = route.params;
@@ -156,24 +157,21 @@ export default function EditShiftScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: Colors.background,
     padding: 20,
     justifyContent: 'center',
   },
   card: {
-    backgroundColor: '#FFF',
+    backgroundColor: Colors.card,
     padding: 20,
     borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
+    color: Colors.textPrimary,
     marginBottom: 30,
     textAlign: 'center',
   },
@@ -183,38 +181,40 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#666',
+    color: Colors.textSecondary,
     marginBottom: 10,
   },
   timeButton: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: Colors.surface,
     padding: 18,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#DDD',
+    borderColor: Colors.border,
   },
   timeText: {
     fontSize: 18,
-    color: '#333',
+    color: Colors.textPrimary,
     textAlign: 'center',
     fontWeight: '500',
   },
   durationCard: {
-    backgroundColor: '#E3F2FD',
+    backgroundColor: Colors.surface,
     padding: 20,
     borderRadius: 8,
     alignItems: 'center',
     marginVertical: 20,
+    borderWidth: 1,
+    borderColor: Colors.primary,
   },
   durationLabel: {
     fontSize: 14,
-    color: '#1976D2',
+    color: Colors.textSecondary,
     marginBottom: 5,
   },
   durationValue: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#2196F3',
+    color: Colors.primary,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -228,23 +228,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cancelButton: {
-    backgroundColor: '#FFF',
+    backgroundColor: Colors.surface,
     borderWidth: 1,
-    borderColor: '#DDD',
+    borderColor: Colors.border,
     marginRight: 10,
   },
   saveButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: Colors.success,
     marginLeft: 10,
   },
   cancelButtonText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#666',
+    color: Colors.textSecondary,
   },
   saveButtonText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#FFF',
+    color: Colors.buttonText,
   },
 });

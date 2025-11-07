@@ -20,6 +20,7 @@ import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { UserSettingsService } from '../services/supabase';
 import { GeofencingService } from '../services/geofencingService';
+import Colors from '../theme/colors';
 
 const GOOGLE_PLACES_API_KEY = 'AIzaSyAMt7DavYfCkVq-_PeMlPtV1O5lwYIj_68';
 
@@ -404,6 +405,7 @@ export default function SettingsScreen({ navigation }) {
         <GooglePlacesAutocomplete
           ref={placesRef}
           placeholder="Search for your work location"
+          placeholderTextColor={Colors.textTertiary}
           onPress={handlePlaceSelect}
           query={{
             key: GOOGLE_PLACES_API_KEY,
@@ -416,14 +418,31 @@ export default function SettingsScreen({ navigation }) {
             container: styles.autocompleteContainer,
             textInput: styles.autocompleteInput,
             listView: styles.autocompleteList,
+            row: {
+              backgroundColor: Colors.card,
+              padding: 13,
+              borderBottomWidth: 1,
+              borderBottomColor: Colors.border,
+            },
+            separator: {
+              height: 1,
+              backgroundColor: Colors.border,
+            },
+            description: {
+              color: Colors.textPrimary,
+            },
+            predefinedPlacesDescription: {
+              color: Colors.textSecondary,
+            },
           }}
-          enablePoweredByContainer={false}
-          predefinedPlaces={[]}
           textInputProps={{
             returnKeyType: 'search',
             onSubmitEditing: ({ nativeEvent }) =>
               handleManualAddressSubmit(nativeEvent?.text),
+            placeholderTextColor: Colors.textTertiary,
           }}
+          enablePoweredByContainer={false}
+          predefinedPlaces={[]}
         />
 
         {/* ✅ NEW: Quick action buttons */}
@@ -484,8 +503,8 @@ export default function SettingsScreen({ navigation }) {
                   longitude: workLocation.longitude,
                 }}
                 radius={parseInt(geofenceRadius) || 150}
-                fillColor="rgba(33, 150, 243, 0.2)"
-                strokeColor="rgba(33, 150, 243, 0.8)"
+                fillColor="rgba(99, 102, 241, 0.2)"
+                strokeColor={Colors.primary}
                 strokeWidth={2}
               />
             </>
@@ -568,18 +587,20 @@ export default function SettingsScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: Colors.background,
   },
   section: {
-    backgroundColor: '#FFF',
+    backgroundColor: Colors.card,
     padding: 20,
     marginVertical: 8,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 15,
-    color: '#333',
+    color: Colors.textPrimary,
   },
   autocompleteContainer: {
     flex: 0,
@@ -587,16 +608,33 @@ const styles = StyleSheet.create({
   autocompleteInput: {
     height: 50,
     borderWidth: 1,
-    borderColor: '#DDD',
+    borderColor: Colors.border,
     borderRadius: 8,
     paddingHorizontal: 15,
     fontSize: 16,
+    backgroundColor: Colors.surface,
+    color: Colors.textPrimary,
   },
   autocompleteList: {
     borderWidth: 1,
-    borderColor: '#DDD',
+    borderColor: Colors.border,
     borderRadius: 8,
     marginTop: 5,
+    backgroundColor: Colors.card,
+  },
+  autocompleteRow: {
+    padding: 13,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border,
+  },
+  autocompleteRowTitle: {
+    color: Colors.textPrimary,
+    fontSize: 16,
+  },
+  autocompleteRowSubtitle: {
+    color: Colors.textSecondary,
+    fontSize: 14,
+    marginTop: 2,
   },
   // ✅ NEW: Quick action buttons
   quickActions: {
@@ -606,21 +644,23 @@ const styles = StyleSheet.create({
   },
   quickActionButton: {
     flex: 1,
-    backgroundColor: '#2196F3',
+    backgroundColor: Colors.primary,
     padding: 12,
     borderRadius: 8,
     alignItems: 'center',
   },
   quickActionText: {
-    color: '#FFF',
+    color: Colors.buttonText,
     fontSize: 14,
     fontWeight: '600',
   },
   mapContainer: {
     height: 300,
-    backgroundColor: '#FFF',
+    backgroundColor: Colors.card,
     marginVertical: 8,
     position: 'relative',
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   map: {
     flex: 1,
@@ -636,9 +676,9 @@ const styles = StyleSheet.create({
     width: 16,
     height: 16,
     borderRadius: 8,
-    backgroundColor: '#2196F3',
+    backgroundColor: Colors.primary,
     borderWidth: 3,
-    borderColor: '#FFFFFF',
+    borderColor: Colors.background,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
@@ -652,39 +692,36 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: Colors.overlay,
     justifyContent: 'center',
     alignItems: 'center',
   },
   loadingText: {
     marginTop: 10,
     fontSize: 14,
-    color: '#666',
+    color: Colors.textSecondary,
   },
   locationInfo: {
     position: 'absolute',
     bottom: 10,
     left: 10,
     right: 10,
-    backgroundColor: '#FFF',
+    backgroundColor: Colors.card,
     padding: 10,
     borderRadius: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   locationText: {
     fontSize: 14,
-    color: '#333',
+    color: Colors.textPrimary,
   },
   // ✅ NEW: Current location indicator
   currentLocationInfo: {
     position: 'absolute',
     top: 10,
     right: 10,
-    backgroundColor: '#2196F3',
+    backgroundColor: Colors.primary,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 20,
@@ -700,11 +737,11 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#FFF',
+    backgroundColor: Colors.buttonText,
     marginRight: 6,
   },
   currentLocationText: {
-    color: '#FFF',
+    color: Colors.buttonText,
     fontSize: 12,
     fontWeight: '600',
   },
@@ -712,48 +749,50 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#DDD',
+    borderColor: Colors.border,
     borderRadius: 8,
     paddingHorizontal: 15,
     height: 50,
+    backgroundColor: Colors.surface,
   },
   inputPrefix: {
     fontSize: 18,
-    color: '#666',
+    color: Colors.textSecondary,
     marginRight: 5,
   },
   input: {
     flex: 1,
     fontSize: 16,
-    color: '#333',
+    color: Colors.textPrimary,
   },
   inputSuffix: {
     fontSize: 14,
-    color: '#666',
+    color: Colors.textSecondary,
     marginLeft: 5,
   },
   textInput: {
     borderWidth: 1,
-    borderColor: '#DDD',
+    borderColor: Colors.border,
     borderRadius: 8,
     padding: 15,
     fontSize: 16,
-    color: '#333',
+    color: Colors.textPrimary,
+    backgroundColor: Colors.surface,
   },
   helperText: {
     fontSize: 12,
-    color: '#999',
+    color: Colors.textTertiary,
     marginTop: 8,
   },
   saveButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: Colors.success,
     margin: 20,
     padding: 18,
     borderRadius: 8,
     alignItems: 'center',
   },
   saveButtonText: {
-    color: '#FFF',
+    color: Colors.buttonText,
     fontSize: 18,
     fontWeight: '600',
   },

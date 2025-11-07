@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Platform, Text} from 'react-native';
+import Colors from './theme/colors';
 
 // Screens
 import HomeScreen from './screens/HomeScreen';
@@ -21,9 +22,12 @@ function TabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: '#2196F3',
-        tabBarInactiveTintColor: '#999',
+        tabBarActiveTintColor: Colors.primary,
+        tabBarInactiveTintColor: Colors.textTertiary,
         tabBarStyle: {
+          backgroundColor: Colors.card,
+          borderTopColor: Colors.border,
+          borderTopWidth: 1,
           paddingBottom: Platform.OS === 'ios' ? 20 : 10,
           height: Platform.OS === 'ios' ? 80 : 60,
         },
@@ -45,11 +49,14 @@ function TabNavigator() {
           title: 'History',
           tabBarIcon: ({ color }) => <Text style={{ fontSize: 24 }}>📅</Text>,
           headerStyle: {
-            backgroundColor: '#2196F3',
+            backgroundColor: Colors.card,
+            borderBottomColor: Colors.border,
+            borderBottomWidth: 1,
           },
-          headerTintColor: '#FFF',
+          headerTintColor: Colors.textPrimary,
           headerTitleStyle: {
             fontWeight: 'bold',
+            color: Colors.textPrimary,
           },
         }}
       />
@@ -60,11 +67,14 @@ function TabNavigator() {
           title: 'Insights',
           tabBarIcon: ({ color }) => <Text style={{ fontSize: 24 }}>📊</Text>,
           headerStyle: {
-            backgroundColor: '#2196F3',
+            backgroundColor: Colors.card,
+            borderBottomColor: Colors.border,
+            borderBottomWidth: 1,
           },
-          headerTintColor: '#FFF',
+          headerTintColor: Colors.textPrimary,
           headerTitleStyle: {
             fontWeight: 'bold',
+            color: Colors.textPrimary,
           },
         }}
       />
@@ -75,11 +85,14 @@ function TabNavigator() {
           title: 'Settings',
           tabBarIcon: ({ color }) => <Text style={{ fontSize: 24 }}>⚙️</Text>,
           headerStyle: {
-            backgroundColor: '#2196F3',
+            backgroundColor: Colors.card,
+            borderBottomColor: Colors.border,
+            borderBottomWidth: 1,
           },
-          headerTintColor: '#FFF',
+          headerTintColor: Colors.textPrimary,
           headerTitleStyle: {
             fontWeight: 'bold',
+            color: Colors.textPrimary,
           },
         }}
       />
@@ -103,11 +116,14 @@ export default function App() {
           options={{
             title: 'Edit Shift',
             headerStyle: {
-              backgroundColor: '#2196F3',
+              backgroundColor: Colors.card,
+              borderBottomColor: Colors.border,
+              borderBottomWidth: 1,
             },
-            headerTintColor: '#FFF',
+            headerTintColor: Colors.textPrimary,
             headerTitleStyle: {
               fontWeight: 'bold',
+              color: Colors.textPrimary,
             },
             presentation: 'modal',
           }}

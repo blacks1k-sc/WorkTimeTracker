@@ -11,6 +11,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { WorkShiftService } from '../services/supabase';
 import { format, parseISO } from 'date-fns';
+import Colors from '../theme/colors';
 
 export default function HistoryScreen({ navigation }) {
   const [shifts, setShifts] = useState([]);
@@ -151,33 +152,30 @@ export default function HistoryScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: Colors.background,
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: Colors.background,
   },
   loadingText: {
     fontSize: 16,
-    color: '#666',
+    color: Colors.textSecondary,
   },
   summaryCard: {
-    backgroundColor: '#2196F3',
+    backgroundColor: Colors.primary,
     margin: 15,
     padding: 20,
     borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   summaryTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#FFF',
+    color: Colors.textPrimary,
     marginBottom: 15,
   },
   summaryStats: {
@@ -190,24 +188,21 @@ const styles = StyleSheet.create({
   summaryValue: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#FFF',
+    color: Colors.textPrimary,
   },
   summaryLabel: {
     fontSize: 14,
-    color: '#E3F2FD',
+    color: Colors.textSecondary,
     marginTop: 5,
   },
   shiftCard: {
-    backgroundColor: '#FFF',
+    backgroundColor: Colors.card,
     marginHorizontal: 15,
     marginVertical: 8,
     padding: 15,
-    borderRadius: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 2,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   shiftHeader: {
     flexDirection: 'row',
@@ -218,19 +213,19 @@ const styles = StyleSheet.create({
   shiftDate: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#333',
+    color: Colors.textPrimary,
   },
   shiftDuration: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#2196F3',
+    color: Colors.primary,
   },
   shiftTime: {
     marginTop: 5,
   },
   timeText: {
     fontSize: 13,
-    color: '#666',
+    color: Colors.textSecondary,
   },
   emptyContainer: {
     alignItems: 'center',
@@ -244,12 +239,12 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 20,
     fontWeight: '600',
-    color: '#333',
+    color: Colors.textPrimary,
     marginBottom: 10,
   },
   emptySubtext: {
     fontSize: 14,
-    color: '#666',
+    color: Colors.textSecondary,
     textAlign: 'center',
   },
 });

@@ -17,6 +17,7 @@ import { WorkShiftService, UserSettingsService } from '../services/supabase';
 import { AnalyticsService } from '../services/analyticsService';
 import { format, parseISO } from 'date-fns';
 import { useFocusEffect } from '@react-navigation/native';
+import Colors from '../theme/colors';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -245,9 +246,9 @@ export default function InsightsScreen() {
               width={screenWidth - 70}
               height={220}
               chartConfig={{
-                backgroundColor: '#2196F3',
-                backgroundGradientFrom: '#42A5F5',
-                backgroundGradientTo: '#2196F3',
+                backgroundColor: Colors.primary,
+                backgroundGradientFrom: Colors.primary,
+                backgroundGradientTo: Colors.primaryDark,
                 decimalPlaces: 1,
                 color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                 labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
@@ -257,7 +258,7 @@ export default function InsightsScreen() {
                 propsForDots: {
                   r: '6',
                   strokeWidth: '2',
-                  stroke: '#ffa726',
+                  stroke: Colors.accentAlt,
                 },
               }}
               bezier
@@ -337,8 +338,8 @@ export default function InsightsScreen() {
                       {
                         color:
                           insights.comparison.difference.hours >= 0
-                            ? '#4CAF50'
-                            : '#F44336',
+                            ? Colors.success
+                            : Colors.error,
                       },
                     ]}
                   >
@@ -359,8 +360,8 @@ export default function InsightsScreen() {
                       {
                         color:
                           insights.comparison.difference.earnings >= 0
-                            ? '#4CAF50'
-                            : '#F44336',
+                            ? Colors.success
+                            : Colors.error,
                       },
                     ]}
                   >
@@ -499,47 +500,44 @@ export default function InsightsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: Colors.background,
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: Colors.background,
   },
   loadingText: {
     fontSize: 16,
-    color: '#666',
+    color: Colors.textSecondary,
   },
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: Colors.background,
     padding: 40,
   },
   emptyText: {
     fontSize: 20,
     fontWeight: '600',
-    color: '#333',
+    color: Colors.textPrimary,
     marginBottom: 10,
   },
   emptySubtext: {
     fontSize: 14,
-    color: '#666',
+    color: Colors.textSecondary,
     textAlign: 'center',
   },
   viewModeContainer: {
     flexDirection: 'row',
-    backgroundColor: '#FFF',
+    backgroundColor: Colors.card,
     margin: 15,
     borderRadius: 12,
     padding: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   viewModeButton: {
     flex: 1,
@@ -549,33 +547,30 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   viewModeButtonActive: {
-    backgroundColor: '#2196F3',
+    backgroundColor: Colors.primary,
   },
   viewModeText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#666',
+    color: Colors.textSecondary,
   },
   viewModeTextActive: {
-    color: '#FFF',
+    color: Colors.textPrimary,
   },
   card: {
-    backgroundColor: '#FFF',
+    backgroundColor: Colors.card,
     margin: 15,
     marginTop: 0,
     padding: 20,
     borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   cardTitle: {
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 15,
-    color: '#333',
+    color: Colors.textPrimary,
   },
   statsGrid: {
     flexDirection: 'row',
@@ -585,29 +580,33 @@ const styles = StyleSheet.create({
   statItem: {
     width: '48%',
     padding: 15,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: Colors.surface,
     borderRadius: 8,
     marginBottom: 10,
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   statValue: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#2196F3',
+    color: Colors.primary,
     marginBottom: 5,
   },
   statLabel: {
     fontSize: 12,
-    color: '#666',
+    color: Colors.textSecondary,
   },
   chart: {
     marginVertical: 8,
     borderRadius: 16,
   },
   quickStatsContainer: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: Colors.surface,
     padding: 15,
     borderRadius: 8,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   quickStatRow: {
     flexDirection: 'row',
@@ -616,18 +615,20 @@ const styles = StyleSheet.create({
   },
   quickStatLabel: {
     fontSize: 14,
-    color: '#666',
+    color: Colors.textSecondary,
     fontWeight: '500',
   },
   quickStatValue: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#333',
+    color: Colors.textPrimary,
   },
   projectionContainer: {
-    backgroundColor: '#E8F5E9',
+    backgroundColor: Colors.surface,
     padding: 15,
     borderRadius: 8,
+    borderWidth: 1,
+    borderColor: Colors.success,
   },
   projectionRow: {
     flexDirection: 'row',
@@ -636,27 +637,29 @@ const styles = StyleSheet.create({
   },
   projectionLabel: {
     fontSize: 14,
-    color: '#2E7D32',
+    color: Colors.textSecondary,
   },
   projectionValue: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1B5E20',
+    color: Colors.textPrimary,
   },
   projectedTotal: {
     fontSize: 20,
-    color: '#4CAF50',
+    color: Colors.success,
   },
   projectionNote: {
     fontSize: 12,
-    color: '#558B2F',
+    color: Colors.textSecondary,
     marginTop: 5,
     textAlign: 'center',
   },
   comparisonContainer: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: Colors.surface,
     padding: 15,
     borderRadius: 8,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   comparisonRow: {
     flexDirection: 'row',
@@ -666,7 +669,7 @@ const styles = StyleSheet.create({
   },
   comparisonLabel: {
     fontSize: 14,
-    color: '#666',
+    color: Colors.textSecondary,
     fontWeight: '500',
   },
   comparisonValues: {
@@ -676,7 +679,7 @@ const styles = StyleSheet.create({
   comparisonCurrent: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333',
+    color: Colors.textPrimary,
     marginRight: 10,
   },
   comparisonChange: {
@@ -685,15 +688,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 4,
-    backgroundColor: '#FFF',
+    backgroundColor: Colors.card,
   },
   achievementItem: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 15,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: Colors.surface,
     borderRadius: 8,
     marginBottom: 10,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   achievementIcon: {
     fontSize: 32,
@@ -704,75 +709,78 @@ const styles = StyleSheet.create({
   },
   achievementLabel: {
     fontSize: 14,
-    color: '#666',
+    color: Colors.textSecondary,
   },
   achievementValue: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#2196F3',
+    color: Colors.primary,
     marginTop: 2,
   },
   achievementDate: {
     fontSize: 12,
-    color: '#999',
+    color: Colors.textTertiary,
     marginTop: 2,
   },
   patternText: {
     fontSize: 16,
-    color: '#666',
+    color: Colors.textSecondary,
     lineHeight: 24,
   },
   patternHighlight: {
     fontWeight: '600',
-    color: '#2196F3',
+    color: Colors.primary,
   },
   paydayText: {
     fontSize: 18,
-    color: '#666',
+    color: Colors.textSecondary,
     textAlign: 'center',
   },
   paydayDays: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#4CAF50',
+    color: Colors.success,
   },
   spacer: {
     height: 40,
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: Colors.overlay,
     justifyContent: 'center',
     alignItems: 'center',
   },
   modalContent: {
-    backgroundColor: '#FFF',
+    backgroundColor: Colors.card,
     borderRadius: 12,
     padding: 20,
     width: '85%',
     maxWidth: 400,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   modalTitle: {
     fontSize: 20,
     fontWeight: '600',
     marginBottom: 20,
     textAlign: 'center',
-    color: '#333',
+    color: Colors.textPrimary,
   },
   inputLabel: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#666',
+    color: Colors.textSecondary,
     marginBottom: 8,
     marginTop: 10,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#DDD',
+    borderColor: Colors.border,
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
-    color: '#333',
+    color: Colors.textPrimary,
+    backgroundColor: Colors.surface,
   },
   modalButtons: {
     flexDirection: 'row',
@@ -786,18 +794,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cancelButton: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: Colors.surface,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   cancelButtonText: {
-    color: '#666',
+    color: Colors.textSecondary,
     fontSize: 16,
     fontWeight: '600',
   },
   submitButton: {
-    backgroundColor: '#2196F3',
+    backgroundColor: Colors.primary,
   },
   submitButtonText: {
-    color: '#FFF',
+    color: Colors.buttonText,
     fontSize: 16,
     fontWeight: '600',
   },

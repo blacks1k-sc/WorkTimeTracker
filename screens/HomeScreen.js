@@ -14,6 +14,7 @@ import { GeofencingService } from '../services/geofencingService';
 import { WorkShiftService, UserSettingsService } from '../services/supabase';
 import { NotificationService } from '../services/notificationService';
 import { format, parseISO } from 'date-fns';
+import Colors from '../theme/colors';
 
 export default function HomeScreen({ navigation }) {
   const [isTracking, setIsTracking] = useState(false);
@@ -25,39 +26,14 @@ export default function HomeScreen({ navigation }) {
   const [enteredTime, setEnteredTime] = useState(null);
   const isFocused = useIsFocused();
 
-  useEffect(() => {
-    const subscription = NotificationService.addNotificationResponseListener(
-      async (response) => {
-        const { notification } = response;
-        const data = notification.request.content.data;
-
-        if (data.type === 'shift_confirmation') {
-          const actionIdentifier = response.actionIdentifier;
-
-          if (actionIdentifier === 'CONFIRM_YES') {
-            await confirmShift(data.shiftData);
-          } else if (actionIdentifier === 'CONFIRM_NO') {
-            navigation.navigate('EditShift', { shiftData: data.shiftData });
-          }
-        }
-      }
-    );
-
-    return () => subscription.remove();
-  }, [navigation, confirmShift]);
-
-  const loadPendingShifts = useCallback(async () => {
-    const pending = await GeofencingService.getPendingShifts();
-    setPendingShifts(pending);
-  }, []);
-
   const confirmShift = useCallback(
     async (shiftData) => {
       try {
         await WorkShiftService.createShift(userId, shiftData);
         await GeofencingService.removePendingShift(
           pendingShifts.findIndex(
-            (s) => s.startTime === shiftData.startTime && s.endTime === shiftData.endTime
+            (s) =>
+              s.startTime === shiftData.startTime && s.endTime === shiftData.endTime
           )
         );
         await loadPendingShifts();
@@ -67,15 +43,18 @@ export default function HomeScreen({ navigation }) {
         Alert.alert('Error', 'Failed to save shift. Please try again.');
       }
     },
-    [userId, pendingShifts, loadPendingShifts]
+    [userId, pendingShifts]
   );
+
+  const loadPendingShifts = useCallback(async () => {
+    const pending = await GeofencingService.getPendingShifts();
+    setPendingShifts(pending);
+  }, []);
 
   const initializeScreen = useCallback(async () => {
     try {
-      // Get user ID (you should implement proper auth)
       const storedUserId = await AsyncStorage.getItem('user_id');
       if (!storedUserId) {
-        // Generate a temporary user ID
         const tempUserId = `user_${Date.now()}`;
         await AsyncStorage.setItem('user_id', tempUserId);
         setUserId(tempUserId);
@@ -83,25 +62,17 @@ export default function HomeScreen({ navigation }) {
         setUserId(storedUserId);
       }
 
-      // Check tracking status
       const isActive = await GeofencingService.isGeofencingActive();
       setIsTracking(isActive);
 
-      // Load work location
       const settings = await UserSettingsService.getSettings(storedUserId);
-      if (settings) {
-        setWorkLocation(settings);
-      }
+      if (settings) setWorkLocation(settings);
 
-      // Get current shift status
       const status = await GeofencingService.getCurrentShiftStatus();
       setCurrentShift(status.currentShift);
       setEnteredTime(status.enteredTime);
 
-      // Load pending shifts
       await loadPendingShifts();
-
-      // Request notification permissions
       await NotificationService.requestPermissions();
     } catch (error) {
       console.error('Error initializing screen:', error);
@@ -109,50 +80,42 @@ export default function HomeScreen({ navigation }) {
   }, [loadPendingShifts]);
 
   useEffect(() => {
-    if (isFocused) {
-      initializeScreen();
-    }
+    if (isFocused) initializeScreen();
   }, [isFocused, initializeScreen]);
 
   const toggleTracking = async () => {
     try {
       if (!workLocation) {
-        Alert.alert(
-          'Setup Required',
-          'Please set up your work location first.',
-          [{ text: 'Set Location', onPress: () => navigation.navigate('Settings') }]
-        );
+        Alert.alert('Setup Required', 'Please set your work location first.', [
+          { text: 'Set Location', onPress: () => navigation.navigate('Settings') },
+        ]);
         return;
       }
 
-      const latitude = workLocation.work_location_lat ?? workLocation.latitude;
-      const longitude = workLocation.work_location_lng ?? workLocation.longitude;
+      const latitude =
+        workLocation.work_location_lat ?? workLocation.latitude;
+      const longitude =
+        workLocation.work_location_lng ?? workLocation.longitude;
       const radius =
-        workLocation.geofence_radius ??
-        workLocation.geofenceRadius ??
-        150;
+        workLocation.geofence_radius ?? workLocation.geofenceRadius ?? 150;
 
       if (isTracking) {
         await GeofencingService.stopGeofencing();
         setIsTracking(false);
         setCurrentShift(null);
         setEnteredTime(null);
-        Alert.alert('Tracking Stopped', 'Location tracking has been disabled.');
+        Alert.alert('Tracking Stopped', 'Location tracking disabled.');
       } else {
         if (typeof latitude !== 'number' || typeof longitude !== 'number') {
-          Alert.alert('Error', 'Work location is missing coordinates.');
+          Alert.alert('Error', 'Work location missing coordinates.');
           return;
         }
-        await GeofencingService.startGeofencing(
-          latitude,
-          longitude,
-          radius || 150
-        );
+        await GeofencingService.startGeofencing(latitude, longitude, radius);
         setIsTracking(true);
         const statusAfterStart = await GeofencingService.getCurrentShiftStatus();
         setCurrentShift(statusAfterStart.currentShift);
         setEnteredTime(statusAfterStart.enteredTime);
-        Alert.alert('Tracking Started', 'Your work hours will now be tracked automatically.');
+        Alert.alert('Tracking Started', 'Now tracking your work hours.');
       }
     } catch (error) {
       console.error('Error toggling tracking:', error);
@@ -183,7 +146,6 @@ export default function HomeScreen({ navigation }) {
           {workLocation
             ? `📍 ${
                 workLocation.work_location_address ??
-                workLocation.workLocationAddress ??
                 workLocation.address ??
                 'Custom Location'
               }`
@@ -191,18 +153,26 @@ export default function HomeScreen({ navigation }) {
         </Text>
       </View>
 
-      {/* Tracking Status Card */}
+      {/* Tracking Status */}
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Tracking Status</Text>
         <View style={styles.statusContainer}>
           <View
-            style={[styles.statusIndicator, { backgroundColor: isTracking ? '#4CAF50' : '#F44336' }]}
+            style={[
+              styles.statusIndicator,
+              { backgroundColor: isTracking ? Colors.success : Colors.error },
+            ]}
           />
-          <Text style={styles.statusText}>{isTracking ? 'Active' : 'Inactive'}</Text>
+          <Text style={styles.statusText}>
+            {isTracking ? 'Active' : 'Inactive'}
+          </Text>
         </View>
-        
+
         <TouchableOpacity
-          style={[styles.button, { backgroundColor: isTracking ? '#F44336' : '#4CAF50' }]}
+          style={[
+            styles.button,
+            { backgroundColor: isTracking ? Colors.error : Colors.success },
+          ]}
           onPress={toggleTracking}
         >
           <Text style={styles.buttonText}>
@@ -222,11 +192,6 @@ export default function HomeScreen({ navigation }) {
                 'h:mm a'
               )}
             </Text>
-            {!currentShift && (
-              <Text style={styles.currentShiftSubtext}>
-                Confirming you’re still on site…
-              </Text>
-            )}
           </View>
         )}
       </View>
@@ -258,7 +223,9 @@ export default function HomeScreen({ navigation }) {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[styles.actionButton, styles.editButton]}
-                  onPress={() => navigation.navigate('EditShift', { shiftData: shift, index })}
+                  onPress={() =>
+                    navigation.navigate('EditShift', { shiftData: shift, index })
+                  }
                 >
                   <Text style={styles.actionButtonText}>✎</Text>
                 </TouchableOpacity>
@@ -297,39 +264,36 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: Colors.background,
   },
   header: {
     padding: 20,
-    backgroundColor: '#2196F3',
     paddingTop: 60,
+    backgroundColor: Colors.surface,
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#FFF',
+    color: Colors.textPrimary,
     marginBottom: 5,
   },
   subtitle: {
     fontSize: 14,
-    color: '#E3F2FD',
+    color: Colors.textSecondary,
   },
   card: {
-    backgroundColor: '#FFF',
+    backgroundColor: Colors.card,
     margin: 15,
     padding: 20,
     borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   cardTitle: {
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 15,
-    color: '#333',
+    color: Colors.textPrimary,
   },
   statusContainer: {
     flexDirection: 'row',
@@ -344,7 +308,7 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: 16,
-    color: '#666',
+    color: Colors.textSecondary,
   },
   button: {
     padding: 15,
@@ -352,65 +316,44 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonText: {
-    color: '#FFF',
+    color: Colors.buttonText,
     fontSize: 16,
     fontWeight: '600',
   },
   currentShiftCard: {
     marginTop: 15,
     padding: 15,
-    backgroundColor: '#E8F5E9',
+    backgroundColor: Colors.surface,
     borderRadius: 8,
-    borderLeftWidth: 4,
-    borderLeftColor: '#4CAF50',
+    borderLeftWidth: 3,
+    borderLeftColor: Colors.accent,
   },
   currentShiftTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#2E7D32',
+    color: Colors.accentAlt,
     marginBottom: 5,
   },
   currentShiftTime: {
     fontSize: 14,
-    color: '#558B2F',
-  },
-  currentShiftSubtext: {
-    fontSize: 12,
-    color: '#7CB342',
-    marginTop: 4,
+    color: Colors.textSecondary,
   },
   pendingShiftCard: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 15,
-    backgroundColor: '#FFF3E0',
+    backgroundColor: Colors.surface,
     borderRadius: 8,
     marginBottom: 10,
-    borderLeftWidth: 4,
-    borderLeftColor: '#FF9800',
+    borderLeftWidth: 3,
+    borderLeftColor: Colors.warning,
   },
-  pendingShiftInfo: {
-    flex: 1,
-  },
-  pendingShiftDate: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#E65100',
-  },
-  pendingShiftTime: {
-    fontSize: 14,
-    color: '#F57C00',
-    marginTop: 2,
-  },
-  pendingShiftDuration: {
-    fontSize: 12,
-    color: '#FB8C00',
-    marginTop: 2,
-  },
-  pendingShiftActions: {
-    flexDirection: 'row',
-  },
+  pendingShiftInfo: { flex: 1 },
+  pendingShiftDate: { fontSize: 14, fontWeight: '600', color: Colors.textPrimary },
+  pendingShiftTime: { fontSize: 14, color: Colors.textSecondary, marginTop: 2 },
+  pendingShiftDuration: { fontSize: 12, color: Colors.textSecondary, marginTop: 2 },
+  pendingShiftActions: { flexDirection: 'row' },
   actionButton: {
     width: 40,
     height: 40,
@@ -419,25 +362,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginLeft: 8,
   },
-  confirmButton: {
-    backgroundColor: '#4CAF50',
-  },
-  editButton: {
-    backgroundColor: '#2196F3',
-  },
-  actionButtonText: {
-    color: '#FFF',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
+  confirmButton: { backgroundColor: Colors.success },
+  editButton: { backgroundColor: Colors.accent },
+  actionButtonText: { color: Colors.buttonText, fontSize: 18, fontWeight: 'bold' },
   quickActionButton: {
     padding: 15,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: Colors.surface,
     borderRadius: 8,
     marginBottom: 10,
   },
   quickActionText: {
-    fontSize: 16,
-    color: '#333',
+    color: Colors.textPrimary,
+    fontSize: 15,
   },
 });
