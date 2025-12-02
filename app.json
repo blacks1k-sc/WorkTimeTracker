@@ -68,7 +68,8 @@
     "extra": {
       "eas": {
         "projectId": "9f112e0d-ea69-4abd-8f90-8911e81f4b66"
-      }
+      },
+      "geminiApiKey": "AIzaSyDM6K_imG1AACGAOvgTv7RLWQxib0wgA2s"
     }
   }
 }
