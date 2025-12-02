@@ -46,6 +46,36 @@ export default function HomeScreen({ navigation }) {
     [userId, pendingShifts]
   );
 
+  const deleteShift = useCallback(
+    async (index) => {
+      Alert.alert(
+        'Delete Shift',
+        'Are you sure you want to delete this pending shift? This action cannot be undone.',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {
+            text: 'Delete',
+            style: 'destructive',
+            onPress: async () => {
+              try {
+                await GeofencingService.removePendingShift(index);
+                await loadPendingShifts();
+                Alert.alert('Success', 'Shift deleted successfully!');
+              } catch (error) {
+                console.error('Error deleting shift:', error);
+                Alert.alert('Error', 'Failed to delete shift. Please try again.');
+              }
+            },
+          },
+        ]
+      );
+    },
+    [loadPendingShifts]
+  );
+
   const loadPendingShifts = useCallback(async () => {
     const pending = await GeofencingService.getPendingShifts();
     setPendingShifts(pending);
@@ -229,6 +259,12 @@ export default function HomeScreen({ navigation }) {
                 >
                   <Text style={styles.actionButtonText}>✎</Text>
                 </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.actionButton, styles.deleteButton]}
+                  onPress={() => deleteShift(index)}
+                >
+                  <Text style={styles.actionButtonText}>🗑</Text>
+                </TouchableOpacity>
               </View>
             </View>
           ))}
@@ -240,21 +276,27 @@ export default function HomeScreen({ navigation }) {
         <Text style={styles.cardTitle}>Quick Actions</Text>
         <TouchableOpacity
           style={styles.quickActionButton}
+          onPress={() => navigation.navigate('Payments')}
+        >
+          <Text style={styles.quickActionText}>Payments</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.quickActionButton}
           onPress={() => navigation.navigate('History')}
         >
-          <Text style={styles.quickActionText}>📅 View Work History</Text>
+          <Text style={styles.quickActionText}>View Work History</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.quickActionButton}
           onPress={() => navigation.navigate('Insights')}
         >
-          <Text style={styles.quickActionText}>📊 View Insights</Text>
+          <Text style={styles.quickActionText}>View Insights</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.quickActionButton}
           onPress={() => navigation.navigate('Settings')}
         >
-          <Text style={styles.quickActionText}>⚙️ Settings</Text>
+          <Text style={styles.quickActionText}>Settings</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -364,6 +406,7 @@ const styles = StyleSheet.create({
   },
   confirmButton: { backgroundColor: Colors.success },
   editButton: { backgroundColor: Colors.accent },
+  deleteButton: { backgroundColor: Colors.error },
   actionButtonText: { color: Colors.buttonText, fontSize: 18, fontWeight: 'bold' },
   quickActionButton: {
     padding: 15,

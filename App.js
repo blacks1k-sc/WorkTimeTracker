@@ -12,6 +12,9 @@ import HistoryScreen from './screens/HistoryScreen';
 import InsightsScreen from './screens/InsightsScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import EditShiftScreen from './screens/EditShiftScreen';
+import PaymentsMainScreen from './screens/PaymentsMainScreen';
+import AddPaymentScreen from './screens/AddPaymentScreen';
+import ViewPaymentsScreen from './screens/ViewPaymentsScreen';
 console.log('HistoryScreen import:', HistoryScreen);
 
 const Tab = createBottomTabNavigator();
@@ -115,6 +118,60 @@ export default function App() {
           component={EditShiftScreen}
           options={{
             title: 'Edit Shift',
+            headerStyle: {
+              backgroundColor: Colors.card,
+              borderBottomColor: Colors.border,
+              borderBottomWidth: 1,
+            },
+            headerTintColor: Colors.textPrimary,
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              color: Colors.textPrimary,
+            },
+            presentation: 'modal',
+          }}
+        />
+        <Stack.Screen
+          name="Payments"
+          component={PaymentsMainScreen}
+          options={{
+            title: 'Payments',
+            headerStyle: {
+              backgroundColor: Colors.card,
+              borderBottomColor: Colors.border,
+              borderBottomWidth: 1,
+            },
+            headerTintColor: Colors.textPrimary,
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              color: Colors.textPrimary,
+            },
+            presentation: 'modal',
+          }}
+        />
+        <Stack.Screen
+          name="AddPayment"
+          component={AddPaymentScreen}
+          options={{
+            title: 'Add Payment',
+            headerStyle: {
+              backgroundColor: Colors.card,
+              borderBottomColor: Colors.border,
+              borderBottomWidth: 1,
+            },
+            headerTintColor: Colors.textPrimary,
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              color: Colors.textPrimary,
+            },
+            presentation: 'modal',
+          }}
+        />
+        <Stack.Screen
+          name="ViewPayments"
+          component={ViewPaymentsScreen}
+          options={{
+            title: 'View Payments',
             headerStyle: {
               backgroundColor: Colors.card,
               borderBottomColor: Colors.border,
